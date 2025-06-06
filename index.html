@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Fun cultural fit assessment tool for workplaces">
+  <title>Cultural Fit Emulator</title>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+          },
+          colors: {
+            primary: "#4F46E5",
+            secondary: "#10B981",
+            accent: "#F59E0B",
+            dark: "#1F2937",
+            light: "#F9FAFB",
+            bgMain: "#F8FAFC",
+          },
+          boxShadow: {
+            'soft': '0 4px 14px 0 rgba(0, 0, 0, 0.08)',
+            'hard': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'bounce-slow': 'bounce 2s infinite'
+          }
+        },
+      }
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+</head>
+
+<body class="bg-bgMain font-sans min-h-screen p-4 md:p-8">
+  <div class="max-w-4xl mx-auto min-h-[calc(100vh-2rem)] md:min-h-[calc(100vh-4rem)] flex flex-col">
+    <!-- Main container with responsive border -->
+    <div
+      class="flex-1 bg-white rounded-xl overflow-hidden flex flex-col md:flex-row shadow-hard transition-all duration-300 hover:shadow-xl border-2 border-gray-100">
+
+      <!-- LEFT: Form -->
+      <div class="w-full md:w-1/2 p-6 md:p-8 space-y-6 flex flex-col">
+        <!-- Language toggle and title -->
+        <div class="space-y-4">
+          <div class="flex justify-end items-end">
+            <select id="langToggle"
+              class="select select-sm p-2 rounded-full border border-gray-200 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              <option value="pt">🇧🇷 Português</option>
+              <option value="en">🇺🇸 English</option>
+            </select>
+          </div>
+
+          <div class="space-y-2">
+            <h1 id="title" class="text-xl md:text-2xl font-bold text-dark text-center">🧠 Cultural Fit Emulator</h1>
+            <p id="subtitle" data-pt="Descubra se você se encaixa na nossa cultura"
+              data-en="Discover if you fit our culture" class="text-center text-gray-500 text-sm"></p>
+          </div>
+        </div>
+
+        <!-- Mobile emoji container (hidden on desktop) -->
+        <div id="mobileEmojiContainer"
+          class="md:hidden w-full py-4 rounded-lg bg-gradient-to-br from-primary to-indigo-300 mb-4">
+          <div id="mobileEmoji" class="text-center text-8xl">🤔</div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="w-full bg-gray-100 rounded-full h-2.5">
+          <div id="progressBar" class="bg-primary h-2.5 rounded-full transition-all duration-500 ease-out"
+            style="width: 0%"></div>
+        </div>
+
+        <!-- Questions -->
+        <form id="questionForm" class="space-y-4 flex-1">
+          <label id="q1Label"
+            class="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-200 hover:border-primary transition-all cursor-pointer shadow-soft hover:shadow-md">
+            <input type="checkbox" id="q1" class="checkbox checkbox-primary mt-1 border-gray-300 focus:ring-primary" />
+            <div class="flex-1">
+              <span data-pt="Se um dia quiser nos processar juridicamente, promete que não vai. Jura pelo mindinho."
+                data-en="If one day you feel like suing us, you won't. Pinky swear."
+                class="leading-snug font-medium text-gray-700"></span>
+              <p class="text-xs text-gray-400 mt-1" data-pt="Esta é uma questão importante para nós"
+                data-en="This is important to us"></p>
+            </div>
+          </label>
+
+          <label id="q2Label"
+            class="flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-200 hover:border-primary transition-all cursor-pointer shadow-soft hover:shadow-md">
+            <input type="checkbox" id="q2" class="checkbox checkbox-primary mt-1 border-gray-300 focus:ring-primary" />
+            <div class="flex-1">
+              <span data-pt="Se estiver apanhando de chicote, promete que não vai pegar o chicote e bater de volta."
+                data-en="If you're getting whipped, promise you won't grab the whip and hit back."
+                class="leading-snug font-medium text-gray-700"></span>
+              <p class="text-xs text-gray-400 mt-1" data-pt="Essa é a nossa política" data-en="This is our policy"></p>
+            </div>
+          </label>
+        </form>
+
+        <!-- Status area -->
+        <div class="space-y-3">
+          <div id="status" class="text-center font-semibold text-lg min-h-[3rem] flex items-center justify-center">
+          </div>
+          <div id="meme" class="text-center text-sm min-h-[2rem]"></div>
+          <button id="resetBtn" class="btn btn-ghost btn-sm w-full text-gray-500 hidden" data-pt="Tentar novamente"
+            data-en="Try again">Try again</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Image (hidden on mobile) -->
+      <div id="desktopVisual"
+        class="hidden md:flex md:w-1/2 bg-gradient-to-br from-primary to-indigo-300 items-center justify-center p-4">
+        <div id="resultVisual" class="text-center text-white animate__animated">
+          <div class="text-7xl mb-2">🤔</div>
+          <p id="visualText" class="font-medium" data-pt="Responda as perguntas" data-en="Answer the questions"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const langToggle = document.getElementById("langToggle");
+    const texts = document.querySelectorAll("[data-pt]");
+    const form = document.getElementById("questionForm");
+    const status = document.getElementById("status");
+    const meme = document.getElementById("meme");
+    const title = document.getElementById("title");
+    const subtitle = document.getElementById("subtitle");
+    const progressBar = document.getElementById("progressBar");
+    const resetBtn = document.getElementById("resetBtn");
+    const resultVisual = document.getElementById("resultVisual");
+    const visualText = document.getElementById("visualText");
+    const q1Label = document.getElementById("q1Label");
+    const q2Label = document.getElementById("q2Label");
+    const mobileEmoji = document.getElementById("mobileEmoji");
+    const mobileEmojiContainer = document.getElementById("mobileEmojiContainer");
+    const desktopVisual = document.getElementById("desktopVisual");
+
+    const memes = {
+      accepted: {
+        pt: "🎉 Parabéns! Você é perfeito para nossa cultura!",
+        en: "🎉 Congratulations! You're perfect for our culture!",
+        visual: "🥳",
+        color: "from-secondary to-green-300"
+      },
+      rejected: {
+        pt: "😬 Hmm... talvez precisemos conversar mais...",
+        en: "😬 Hmm... maybe we need to talk more...",
+        visual: "😅",
+        color: "from-accent to-yellow-300"
+      },
+      incomplete: {
+        pt: "📝 Responda todas as perguntas para continuar",
+        en: "📝 Answer all questions to continue",
+        visual: "🤔",
+        color: "from-primary to-indigo-300"
+      },
+    };
+
+    function updateLang() {
+      const lang = langToggle.value;
+      title.textContent =
+        lang === "pt" ? "🧠 Emulador de Fit Cultural" : "🧠 Cultural Fit Emulator";
+      texts.forEach((el) => {
+        el.textContent = el.dataset[lang];
+      });
+      updateStatus();
+    }
+
+    function updateStatus() {
+      const q1 = document.getElementById("q1").checked;
+      const q2 = document.getElementById("q2").checked;
+      const lang = langToggle.value;
+      const progress = ((q1 ? 50 : 0) + (q2 ? 50 : 0));
+
+      // Update progress bar
+      progressBar.style.width = `${progress}%`;
+      progressBar.className = `bg-${progress === 100 ? 'secondary' : progress > 0 ? 'accent' : 'primary'} h-2.5 rounded-full transition-all duration-500 ease-out`;
+
+      if (q1 && q2) {
+        // Approved state
+        status.innerHTML = `<span class="animate__animated animate__bounceIn text-secondary font-bold">${lang === "pt" ? "Aprovado!" : "Approved!"}</span>`;
+        meme.innerHTML = `<span class="animate__animated animate__fadeIn text-gray-600">${memes.accepted[lang]}</span>`;
+
+        // Update visuals
+        const visualHTML = `<div class="text-7xl mb-2 animate__animated animate__bounce">${memes.accepted.visual}</div>
+                             <p class="font-medium text-white text-lg">${lang === "pt" ? "Bem-vindo à equipe!" : "Welcome to the team!"}</p>`;
+        resultVisual.innerHTML = visualHTML;
+        mobileEmoji.innerHTML = memes.accepted.visual;
+        mobileEmojiContainer.className = `md:hidden w-full py-4 rounded-lg bg-gradient-to-br ${memes.accepted.color} mb-4`;
+
+        // Update desktop background
+        desktopVisual.className = `hidden md:flex md:w-1/2 items-center justify-center p-4 bg-gradient-to-br ${memes.accepted.color}`;
+        resetBtn.classList.remove('hidden');
+
+        // Disable checkboxes
+        document.getElementById("q1").disabled = true;
+        document.getElementById("q2").disabled = true;
+        q1Label.classList.remove('hover:border-primary', 'hover:shadow-md', 'cursor-pointer');
+        q2Label.classList.remove('hover:border-primary', 'hover:shadow-md', 'cursor-pointer');
+
+      } else if (q1 || q2) {
+        // Partially completed
+        status.innerHTML = `<span class="text-accent font-bold">${lang === "pt" ? "Quase lá..." : "Almost there..."}</span>`;
+        meme.innerHTML = `<span class="text-gray-500">${memes.rejected[lang]}</span>`;
+
+        // Update visuals
+        const visualHTML = `<div class="text-6xl mb-2">${memes.rejected.visual}</div>
+                            <p class="font-medium text-white">${lang === "pt" ? "Continue respondendo" : "Keep answering"}</p>`;
+        resultVisual.innerHTML = visualHTML;
+        mobileEmoji.innerHTML = memes.rejected.visual;
+        mobileEmojiContainer.className = `md:hidden w-full py-4 rounded-lg bg-gradient-to-br ${memes.rejected.color} mb-4`;
+
+        // Update desktop background
+        desktopVisual.className = `hidden md:flex md:w-1/2 items-center justify-center p-4 bg-gradient-to-br ${memes.rejected.color}`;
+        resetBtn.classList.add('hidden');
+      } else {
+        // Not started
+        status.innerHTML = `<span class="text-primary">${lang === "pt" ? "⏳ Responda as perguntas" : "⏳ Answer the questions"}</span>`;
+        meme.innerHTML = `<span class="text-gray-400">${memes.incomplete[lang]}</span>`;
+
+        // Update visuals
+        const visualHTML = `<div class="text-6xl mb-2">${memes.incomplete.visual}</div>
+                            <p class="font-medium text-white">${visualText.textContent}</p>`;
+        resultVisual.innerHTML = visualHTML;
+        mobileEmoji.innerHTML = memes.incomplete.visual;
+        mobileEmojiContainer.className = `md:hidden w-full py-4 rounded-lg bg-gradient-to-br ${memes.incomplete.color} mb-4`;
+
+        // Update desktop background
+        desktopVisual.className = `hidden md:flex md:w-1/2 items-center justify-center p-4 bg-gradient-to-br ${memes.incomplete.color}`;
+        resetBtn.classList.add('hidden');
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("q1").checked = false;
+      document.getElementById("q2").checked = false;
+      document.getElementById("q1").disabled = false;
+      document.getElementById("q2").disabled = false;
+      q1Label.classList.add('hover:border-primary', 'hover:shadow-md', 'cursor-pointer');
+      q2Label.classList.add('hover:border-primary', 'hover:shadow-md', 'cursor-pointer');
+      updateStatus();
+    }
+
+    form.addEventListener("change", updateStatus);
+    langToggle.addEventListener("change", updateLang);
+    resetBtn.addEventListener("click", resetForm);
+
+    // Initialize
+    updateLang();
+
+    // Add animation to checkboxes when hovered
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('mouseenter', function () {
+        this.parentElement.classList.add('animate__animated', 'animate__pulse');
+      });
+      checkbox.addEventListener('mouseleave', function () {
+        this.parentElement.classList.remove('animate__animated', 'animate__pulse');
+      });
+    });
+  </script>
+</body>
+
+</html>
